@@ -1,10 +1,6 @@
-import express from "express";
-import path from "path";
+import express from 'express';
+import path from 'path'
 import { Server } from "socket.io";
-import { fileURLToPath } from "url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const PORT = process.env.PORT || 8000;
 const app = express();
@@ -16,17 +12,31 @@ const socketEvent = {
   JOIN: "join",
 };
 
+type User = {
+  name: string;
+  id: string;
+};
+
 const userState = {
-  users: [],
-  setUsers: function (users) {
+  users: new Array<User>(),
+  setUsers: function (users: User[]) {
     this.users = users;
   },
 };
 
+interface outgoingMessage {
+  message: string;
+  username: string;
+}
+interface incomingMessage {
+  message: string;
+}
+console.log(path.join(__dirname, "public"));
+
 app.use(express.static(path.join(__dirname, "public")));
 
 const expressServer = app.listen(PORT, () => {
-  console.log(`Server is running on port ${expressServer.address().port}`);
+  console.log(`Server is running on port ${expressServer.address()}`);
 });
 
 app.get("/", (req, res) => {
@@ -42,9 +52,10 @@ const io = new Server(expressServer, {
 io.on(socketEvent.CONNECT, (socket) => {
   console.log(`New client connected: ${socket.id})`);
 
-  socket.on(socketEvent.MESSAGE, (message) => {
-      const username = findUserById(socket.id).name;
-      console.log("User", username);
+  socket.on(socketEvent.MESSAGE, (message: incomingMessage) => {
+    const user: User = findUserById(socket.id) as User;
+    const username = user.name;
+    console.log("User", username);
     const outgoing = {
       username,
       ...message,
@@ -52,13 +63,13 @@ io.on(socketEvent.CONNECT, (socket) => {
     io.emit(socketEvent.MESSAGE, outgoing);
   });
 
-  socket.on(socketEvent.JOIN, (data) => {
+  socket.on(socketEvent.JOIN, (data: { username: string }) => {
     activateUser(data.username, socket.id);
     socket.emit(socketEvent.JOIN, data);
   });
 });
 
-function activateUser(name, id) {
+function activateUser(name: string, id: string) {
   const user = {
     name,
     id,
@@ -71,6 +82,6 @@ function activateUser(name, id) {
   return user;
 }
 
-function findUserById(userId) {
-  return userState.users.find(({ id }) => id === userId);
+function findUserById(socketId: string) {
+  return userState.users.find(({ id }) => id === socketId);
 }
