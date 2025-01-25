@@ -8,7 +8,7 @@ const __dirname = path.dirname(__filename);
 console.log("fileName", __filename);
 console.log("dirName", __dirname);
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 8000;
 const app = express();
 
 app.use(express.static(path.join(__dirname, "public")));

@@ -1,5 +1,5 @@
 
-let socketUrl = "ws://localhost:3001";
+let socketUrl = "ws://localhost:8000";
 const socket = io(socketUrl);
 
 socket.on("message", (data) => {
