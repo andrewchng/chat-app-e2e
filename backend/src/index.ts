@@ -36,10 +36,10 @@ console.log(path.join(__dirname, "public"));
 app.use(express.static(path.join(__dirname, "public")));
 
 const expressServer = app.listen(PORT, () => {
-  console.log(`Server is running on port ${expressServer.address()}`);
+  console.log(`Server is running on port ${PORT}`);
 });
 
-app.get("/", (req, res) => {
+app.get("/hello", (req, res) => {
   res.send("Hello World");
 });
 
