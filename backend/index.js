@@ -13,20 +13,24 @@ const app = express();
 
 app.use(express.static(path.join(__dirname, "public")));
 
-const expressServer = app.listen(PORT, ()=>{
-    console.log(`Server is running on port ${expressServer.address().port}`);
+const expressServer = app.listen(PORT, () => {
+  console.log(`Server is running on port ${expressServer.address().port}`);
 });
 
-app.get("/", (req, res)=>{
-    res.send("Hello World");
+app.get("/", (req, res) => {
+  res.send("Hello World");
 });
 
-const io = new Server(expressServer,{
-    cors:{
-        origin:"*",
-    },
+const io = new Server(expressServer, {
+  cors: {
+    origin: "*",
+  },
 });
 
-io.on("connection", (socket)=>{
-    console.log(`New client connected: ${socket.id})`);
+io.on("connection", (socket) => {
+  console.log(`New client connected: ${socket.id})`);
+
+  socket.on("message", (data) => {
+    io.emit("message", data);
+  });
 });
