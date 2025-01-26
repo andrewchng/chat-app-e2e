@@ -28,6 +28,19 @@ services:
     depends_on:
       - mongo
 
+  frontend:
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: chat-frontend-dev
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+
 # Add the volume definition at the top level
 volumes:
   mongodb_data:
