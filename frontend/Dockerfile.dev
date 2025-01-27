@@ -1,5 +1,5 @@
 # Use an official Node.js runtime as a parent image for development
-FROM node:18-alpine
+FROM node:22-alpine
 
 # Set the working directory in the container
 WORKDIR /app
@@ -9,6 +9,8 @@ COPY package.json ./
 
 # Install dependencies
 RUN npm install
+
+COPY . .
 
 # Expose port
 EXPOSE 3001
