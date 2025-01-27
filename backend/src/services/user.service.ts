@@ -1,18 +1,12 @@
 import User from "../models/user.model"
-// type User = {
-//   name: string;
-//   id: string;
-// };
-class UserService {
-  private UserModel = User;
 
-  // private users;
+class UserService {
 
   public async activateUser(name: string, socketId: string) {
     let user = await this.findUserById(socketId);
     try {
       if(!user){
-        user = new this.UserModel({name, socketId})
+        user = new User({name, socketId})
       } else{
         user.name = name;
       }
