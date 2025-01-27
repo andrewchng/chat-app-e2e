@@ -3,6 +3,7 @@
 
 ## Potential setup for Frontend
 
+```
 frontend/
 ├── public/                  # Static assets (e.g., images, favicon)
 ├── src/
@@ -34,3 +35,4 @@ frontend/
 ├── vite.config.ts           # Vite configuration
 ├── package.json
 └── README.md
+```
