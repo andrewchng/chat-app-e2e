@@ -1,7 +1,6 @@
 import { Server, Socket } from "socket.io";
-import http from "http";
-import { UserState } from "./userState";
-
+import  UserService  from "./services/user.service";
+// src/socke
 enum socketEvent {
   CONNECT = "connect",
   DISCONNECT = "disconnect",
@@ -9,19 +8,11 @@ enum socketEvent {
   JOIN = "join",
 }
 
-const userState = new UserState();
-
 interface incomingMessage {
   message: string;
 }
 
-export function initializeSocketServer(server: http.Server) {
-  const io = new Server(server, {
-    cors: {
-      origin: "*",
-    },
-  });
-
+export function initializeSocketServer(io: Server) {
   io.on(socketEvent.CONNECT, (socket) => {
     console.log(`New client connected: ${socket.id})`);
     socket.on(socketEvent.MESSAGE, (message: incomingMessage) => {
@@ -34,17 +25,17 @@ export function initializeSocketServer(server: http.Server) {
   });
 }
 
-const handleJoin = (socket: Socket, data: { username: string }) => {
-  userState.activateUser(data.username, socket.id);
+const handleJoin =  async (socket: Socket, data: { username: string }) => {
+  await UserService.activateUser(data.username, socket.id);
   socket.emit(socketEvent.JOIN, data);
 };
 
-const handleMessage = (
+const handleMessage = async (
   io: Server,
   socket: Socket,
   message: incomingMessage
 ) => {
-  const user = userState.findUserById(socket.id);
+  const user = await UserService.findUserById(socket.id);
   const username = user?.name;
   const outgoing = {
     username,
