@@ -1,14 +1,12 @@
 import { Server, Socket } from "socket.io";
-import { UserState } from "./userState";
-
+import  UserService  from "./services/user.service";
+// src/socke
 enum socketEvent {
   CONNECT = "connect",
   DISCONNECT = "disconnect",
   MESSAGE = "message",
   JOIN = "join",
 }
-
-const userState = new UserState();
 
 interface incomingMessage {
   message: string;
@@ -28,7 +26,7 @@ export function initializeSocketServer(io: Server) {
 }
 
 const handleJoin =  async (socket: Socket, data: { username: string }) => {
-  await userState.activateUser(data.username, socket.id);
+  await UserService.activateUser(data.username, socket.id);
   socket.emit(socketEvent.JOIN, data);
 };
 
@@ -37,7 +35,7 @@ const handleMessage = async (
   socket: Socket,
   message: incomingMessage
 ) => {
-  const user = await userState.findUserById(socket.id);
+  const user = await UserService.findUserById(socket.id);
   const username = user?.name;
   const outgoing = {
     username,
