@@ -20,12 +20,21 @@ function RootComponent() {
           Home
         </Link>{' '}
         <Link
-          to="/about"
+          to="/landing"
+          activeProps={{
+            className: 'font-bold',
+          }}
+          activeOptions={{ exact: true }}
+        >
+          Landing
+        </Link>{' '}
+        <Link
+          to="/chat"
           activeProps={{
             className: 'font-bold',
           }}
         >
-          About
+          Chat Room
         </Link>
       </div>
       <hr />

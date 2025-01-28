@@ -5,6 +5,7 @@ export const Route = createFileRoute("/")({
 });
 import { socket } from "../socket";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { socketEvent } from "../types/socket-events";
 
 interface incomingMessage {
   message: string;
@@ -14,16 +15,9 @@ interface outgoingMessage {
   message: string;
 }
 
-enum socketEvent {
-  CONNECT = "connect",
-  DISCONNECT = "disconnect",
-  MESSAGE = "message",
-  JOIN = "join",
-}
-
 function HomeComponent() {
   const [isConnected, setIsConnected] = useState(socket.connected);
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
   const [message, setMessage] = useState<string>("");
   const [chat, setChat] = useState<incomingMessage[]>([]);
 
@@ -64,8 +58,6 @@ function HomeComponent() {
 
   return (
     <div className="p-2">
-      {/* <p>State: {"" + isConnected}</p>{" "} */}
-      <Login></Login>
       {isLoggedIn && (
         <div>
           <h1>Chat area</h1>
@@ -89,29 +81,6 @@ function HomeComponent() {
           <button onClick={onSend}>Send</button>
         </div>
       )}
-    </div>
-  );
-}
-
-function Login() {
-  const [username, setUsername] = useState<string>("");
-
-  const onJoin = () => {
-    socket.emit(socketEvent.JOIN, {
-      username,
-    });
-
-    console.log("JOIN");
-  };
-
-  return (
-    <div>
-      <input
-        value={username}
-        placeholder="username"
-        onChange={(e) => setUsername(e.target.value)}
-      ></input>
-      <button onClick={onJoin}>Login</button>
     </div>
   );
 }

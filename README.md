@@ -28,11 +28,12 @@ frontend/
 │   ├── App.tsx              # Main app component
 │   ├── main.tsx             # Entry point
 │   └── index.css            # Global styles
-├── .env                     # Environment variables
-├── .eslintrc                # ESLint configuration
-├── .prettierrc              # Prettier configuration
-├── tailwind.config.js       # Tailwind CSS configuration
-├── vite.config.ts           # Vite configuration
+├── configs/
+│   ├── .env
+│   ├── .eslintrc
+│   ├── .prettierrc
+│   ├── tailwind.config.js
+│   └── vite.config.ts
 ├── package.json
 └── README.md
 ```
