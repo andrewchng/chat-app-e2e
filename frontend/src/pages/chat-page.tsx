@@ -30,12 +30,12 @@ export default function ChatPage() {
           </li>
         ))}
       </ul>
-      <ChatInput></ChatInput>
+      <ChatMessageBar></ChatMessageBar>
     </div>
   );
 }
 
-function ChatInput() {
+function ChatMessageBar() {
   const [messageInput, setMessageInput] = useState("");
   function onSend() {
     const message: outgoingMessage = {
@@ -43,25 +43,29 @@ function ChatInput() {
     };
     socket.emit(socketEvent.MESSAGE, message);
     console.log("send message!", message);
+    setMessageInput("");
   }
 
   return (
-    <div className="fixed bottom-0 shadow-l left-0 right-0 text-black m-4 bg-white h-16 rounded-4xl">
-      <div className="flex h-full w-full px-6 py-2">
-        <input
-          onChange={(e) => setMessageInput(e.target.value)}
-          value={messageInput}
-          className="h-full flex-grow focus:outline-none focus:border-black"
-          placeholder="Send a Message"
-          type="text"
-        />
-        <button
-          onClick={onSend}
-          className="ml-4 bg-blue-400 rounded px-6 py-2 hover:bg-blue-500 transition-colors"
-        >
-          Send
-        </button>
-      </div>
+    <div className="fixed bottom-0 shadow-l left-0 right-0 text-grey-100 m-4 bg-gray-800 h-13 rounded-4xl">
+        <form className="flex h-full w-full px-6 py-2" onSubmit={(e)=>{
+          e.preventDefault();
+          onSend();
+        }}>
+          <input
+            onChange={(e) => setMessageInput(e.target.value)}
+            value={messageInput}
+            className="h-full flex-grow focus:outline-none focus:border-black"
+            placeholder="Send a Message"
+            type="text"
+          />
+          <button
+            type="submit"
+            className="ml-4 rounded py-2 px-3  hover:bg-gray-700 transition-colors"
+          >
+            ^
+          </button>
+        </form>
     </div>
   );
 }
