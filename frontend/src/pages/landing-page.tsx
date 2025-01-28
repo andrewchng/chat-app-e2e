@@ -1,8 +1,10 @@
 import { useForm } from "@tanstack/react-form";
 import { socket } from "../socket";
 import { socketEvent } from "../types/socket-events";
+import { useNavigate } from "@tanstack/react-router";
 
 function LandingPage() {
+  const navigate = useNavigate();
   const form = useForm({
     defaultValues: {
       name: "",
@@ -15,6 +17,11 @@ function LandingPage() {
   function onJoin(data: { name: string; }){ 
     socket.emit(socketEvent.JOIN, 
       {username: data.name})
+      localStorage.setItem("username", data.name)
+      navigate({
+        to: "/chat",
+
+      })
   }
 
   return (
