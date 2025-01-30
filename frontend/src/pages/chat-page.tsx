@@ -3,6 +3,7 @@ import { socket } from "@/socket";
 import { socketEvent } from "../types/socket-events";
 import { useNavigate } from "@tanstack/react-router";
 import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
 
 interface outgoingMessage {
   message: string;
@@ -19,7 +20,7 @@ export default function ChatPage() {
   const [chat, setChat] = useState<chatBubble[]>([]);
 
   useEffect(() => {
-    console.log(localStorage.getItem("username"))
+    console.log(localStorage.getItem("username"));
     if (!localStorage.getItem("username")) {
       navigate({
         to: "/",
@@ -27,15 +28,15 @@ export default function ChatPage() {
       return;
     }
 
-    function onMessage (message: chatBubble){
-      console.log("incoming message", message)
+    function onMessage(message: chatBubble) {
+      console.log("incoming message", message);
       setChat((chat) => [...chat, message]);
     }
 
     socket.on(socketEvent.MESSAGE, onMessage);
-    return ()=>{
-      socket.off(socketEvent.MESSAGE, onMessage)
-    }
+    return () => {
+      socket.off(socketEvent.MESSAGE, onMessage);
+    };
   }, []);
 
   return (
@@ -53,14 +54,14 @@ export default function ChatPage() {
 }
 
 function ChatMessageBar() {
-  const inputRef = useRef<HTMLInputElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null);
   const [messageInput, setMessageInput] = useState("");
 
-  useEffect(()=>{
-    if(inputRef.current){
+  useEffect(() => {
+    if (inputRef.current) {
       inputRef.current.focus();
     }
-  },[])
+  }, []);
 
   function onSend() {
     const message: outgoingMessage = {
@@ -72,7 +73,7 @@ function ChatMessageBar() {
   }
 
   return (
-    <div className="fixed bottom-0 shadow-l left-0 right-0 text-grey-100 m-4 bg-gray-800 h-13 rounded-4xl">
+    <div className="fixed bottom-5 left-0 right-0 h-13 rounded-4xl">
       <form
         className="flex h-full w-full px-6 py-2"
         onSubmit={(e) => {
@@ -80,16 +81,16 @@ function ChatMessageBar() {
           onSend();
         }}
       >
-        <input
+        <Input
           ref={inputRef}
           onChange={(e) => setMessageInput(e.target.value)}
           value={messageInput}
           className="h-full flex-grow focus:outline-none focus:border-black"
           placeholder="Send a Message"
           type="text"
-        />
+        ></Input>
         <Button
-        variant={"outline"}
+          variant={"outline"}
           type="submit"
           className="ml-4 rounded py-2 px-3  hover:bg-gray-700 transition-colors"
         >

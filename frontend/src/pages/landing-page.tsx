@@ -4,6 +4,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { Button } from "@/components/ui/Button";
 import { socket } from "@/socket";
 import { useEffect } from "react";
+import { Input } from "@/components/ui/Input";
 
 function LandingPage() {
   const navigate = useNavigate();
@@ -16,9 +17,9 @@ function LandingPage() {
     },
   });
 
-  useEffect(()=>{
+  useEffect(() => {
     localStorage.clear();
-  },[])
+  }, []);
 
   function onJoin(data: { name: string }) {
     socket.emit(socketEvent.JOIN, { username: data.name });
@@ -42,7 +43,7 @@ function LandingPage() {
           <form.Field
             name="name"
             children={(field) => (
-              <input
+              <Input
                 name={field.name}
                 value={field.state.value}
                 placeholder="Enter your name"
@@ -53,7 +54,9 @@ function LandingPage() {
             )}
           />
         </div>
-        <Button variant="outline" type="submit">Submit</Button>
+        <Button variant="outline" type="submit">
+          Submit
+        </Button>
       </form>
     </div>
   );
