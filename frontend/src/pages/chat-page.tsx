@@ -1,7 +1,8 @@
-import { MouseEventHandler, useEffect, useRef, useState } from "react";
-import { socket } from "../socket";
+import { useEffect, useRef, useState } from "react";
+import { socket } from "@/socket";
 import { socketEvent } from "../types/socket-events";
 import { useNavigate } from "@tanstack/react-router";
+import { Button } from "@/components/ui/Button";
 
 interface outgoingMessage {
   message: string;
@@ -18,15 +19,23 @@ export default function ChatPage() {
   const [chat, setChat] = useState<chatBubble[]>([]);
 
   useEffect(() => {
+    console.log(localStorage.getItem("username"))
     if (!localStorage.getItem("username")) {
       navigate({
         to: "/",
       });
+      return;
     }
 
-    socket.on(socketEvent.MESSAGE, (message) => {
+    function onMessage (message: chatBubble){
+      console.log("incoming message", message)
       setChat((chat) => [...chat, message]);
-    });
+    }
+
+    socket.on(socketEvent.MESSAGE, onMessage);
+    return ()=>{
+      socket.off(socketEvent.MESSAGE, onMessage)
+    }
   }, []);
 
   return (
@@ -79,12 +88,13 @@ function ChatMessageBar() {
           placeholder="Send a Message"
           type="text"
         />
-        <button
+        <Button
+        variant={"outline"}
           type="submit"
           className="ml-4 rounded py-2 px-3  hover:bg-gray-700 transition-colors"
         >
           ^
-        </button>
+        </Button>
       </form>
     </div>
   );

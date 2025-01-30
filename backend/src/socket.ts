@@ -26,6 +26,7 @@ export function initializeSocketServer(io: Server) {
 }
 
 const handleJoin =  async (socket: Socket, data: { username: string }) => {
+  console.log(`New user joined: ${data.username}`)
   await UserService.activateUser(data.username, socket.id);
   socket.emit(socketEvent.JOIN, data);
 };
@@ -37,9 +38,12 @@ const handleMessage = async (
 ) => {
   const user = await UserService.findUserById(socket.id);
   const username = user?.name;
+  console.log(`Message received: ${message} by ${username}`);
   const outgoing = {
     username,
     ...message,
   };
   io.emit(socketEvent.MESSAGE, outgoing);
+  console.log(`Message sent back: ${message} by ${username}`);
+
 };

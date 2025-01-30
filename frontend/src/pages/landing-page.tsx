@@ -1,7 +1,9 @@
 import { useForm } from "@tanstack/react-form";
-import { socket } from "../socket";
 import { socketEvent } from "../types/socket-events";
 import { useNavigate } from "@tanstack/react-router";
+import { Button } from "@/components/ui/Button";
+import { socket } from "@/socket";
+import { useEffect } from "react";
 
 function LandingPage() {
   const navigate = useNavigate();
@@ -10,23 +12,26 @@ function LandingPage() {
       name: "",
     },
     onSubmit: async ({ value }) => {
-      onJoin(value)
+      onJoin(value);
     },
   });
 
-  function onJoin(data: { name: string; }){ 
-    socket.emit(socketEvent.JOIN, 
-      {username: data.name})
-      localStorage.setItem("username", data.name)
-      navigate({
-        to: "/chat",
+  useEffect(()=>{
+    localStorage.clear();
+  },[])
 
-      })
+  function onJoin(data: { name: string }) {
+    socket.emit(socketEvent.JOIN, { username: data.name });
+    localStorage.setItem("username", data.name);
+    navigate({
+      to: "/chat",
+    });
   }
 
   return (
-    <div className="p-2">
+    <div className="p-2 flex h-screen justify-center items-center">
       <form
+        className="flex"
         onSubmit={(e) => {
           e.preventDefault();
           e.stopPropagation();
@@ -48,7 +53,7 @@ function LandingPage() {
             )}
           />
         </div>
-        <button type="submit">Submit</button>
+        <Button variant="outline" type="submit">Submit</Button>
       </form>
     </div>
   );
