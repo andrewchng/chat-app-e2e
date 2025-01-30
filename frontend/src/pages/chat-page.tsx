@@ -3,6 +3,7 @@ import { socket } from "@/socket";
 import { socketEvent } from "../types/socket-events";
 import { useNavigate } from "@tanstack/react-router";
 import { Button } from "@/components/ui/Button";
+import { ChevronUp } from "lucide-react";
 import { Input } from "@/components/ui/Input";
 
 interface outgoingMessage {
@@ -41,15 +42,22 @@ export default function ChatPage() {
 
   return (
     <div className="p-2">
-      <ul>
-        {chat.map((bubble, index) => (
-          <li key={index}>
-            {bubble.username}: {bubble.message}
-          </li>
-        ))}
-      </ul>
+      {chat.map((bubble, index) => (
+        <ChatBubble key={index} {...bubble}></ChatBubble>
+      ))}
       <ChatMessageBar></ChatMessageBar>
     </div>
+  );
+}
+
+function ChatBubble({ username, message, timestamp }: chatBubble) {
+  return (
+    <>
+      <div className="flex w-max max-w-[75%] bg-secondary px-3 py-2 ml-auto rounded-lg m-2">
+        {username}: {message}
+        {timestamp && <span> ({timestamp.toLocaleTimeString()})</span>}
+      </div>
+    </>
   );
 }
 
@@ -73,30 +81,32 @@ function ChatMessageBar() {
   }
 
   return (
-    <div className="fixed bottom-5 left-0 right-0 h-13 rounded-4xl">
-      <form
-        className="flex h-full w-full px-6 py-2"
-        onSubmit={(e) => {
-          e.preventDefault();
-          onSend();
-        }}
-      >
-        <Input
-          ref={inputRef}
-          onChange={(e) => setMessageInput(e.target.value)}
-          value={messageInput}
-          className="h-full flex-grow focus:outline-none focus:border-black"
-          placeholder="Send a Message"
-          type="text"
-        ></Input>
-        <Button
-          variant={"outline"}
-          type="submit"
-          className="ml-4 rounded py-2 px-3  hover:bg-gray-700 transition-colors"
+    <div className="fixed bottom-5 left-0 right-0 h-13 flex justify-center">
+      <div className="md:max-w-[75%] sm:max-w-[90%] rounded-lg w-full">
+        <form
+          className="flex "
+          onSubmit={(e) => {
+            e.preventDefault();
+            onSend();
+          }}
         >
-          ^
-        </Button>
-      </form>
+          <Input
+            ref={inputRef}
+            onChange={(e) => setMessageInput(e.target.value)}
+            value={messageInput}
+            className="h-full flex-grow"
+            placeholder="Send a Message"
+            type="text"
+          ></Input>
+          <Button
+            variant={"outline"}
+            type="submit"
+            className="ml-1 rounded py-2 px-3"
+          >
+            <ChevronUp />
+          </Button>
+        </form>
+      </div>
     </div>
   );
 }
