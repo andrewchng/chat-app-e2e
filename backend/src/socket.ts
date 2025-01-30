@@ -10,6 +10,7 @@ enum socketEvent {
 
 interface incomingMessage {
   message: string;
+  timestamp: Date;
 }
 
 export function initializeSocketServer(io: Server) {
@@ -38,12 +39,12 @@ const handleMessage = async (
 ) => {
   const user = await UserService.findUserById(socket.id);
   const username = user?.name;
-  console.log(`Message received: ${message} by ${username}`);
+  console.log(`Message received: ${message.message} by ${username} on ${message.timestamp}`);
   const outgoing = {
     username,
     ...message,
   };
   io.emit(socketEvent.MESSAGE, outgoing);
-  console.log(`Message sent back: ${message} by ${username}`);
+  console.log(`Message sent back: ${message.message} by ${username}`);
 
 };

@@ -3,17 +3,19 @@ import { socket } from "@/socket";
 import { socketEvent } from "../types/socket-events";
 import { useNavigate } from "@tanstack/react-router";
 import { Button } from "@/components/ui/Button";
+import moment from "moment";
 import { ChevronUp } from "lucide-react";
 import { Input } from "@/components/ui/Input";
 
 interface outgoingMessage {
   message: string;
+  timestamp: Date;
 }
 
 interface chatBubble {
   username: string;
   message: string;
-  timestamp?: Date;
+  timestamp: Date;
 }
 
 export default function ChatPage() {
@@ -51,11 +53,16 @@ export default function ChatPage() {
 }
 
 function ChatBubble({ username, message, timestamp }: chatBubble) {
+  const ts = moment(timestamp).format("D MMM h:mm a");
+
   return (
     <>
-      <div className="flex w-max max-w-[75%] bg-secondary px-3 py-2 ml-auto rounded-lg m-2">
-        {username}: {message}
-        {timestamp && <span> ({timestamp.toLocaleTimeString()})</span>}
+      <div className="flex flex-col w-max max-w-[75%] bg-secondary px-3 py-2 ml-auto rounded-lg m-2">
+        <div className="text-xs font-bold">{username}</div>
+        <div className="text-sm">{message}</div>
+        <div className="text-xs text-right texttext-secondary-foreground">
+          {ts}
+        </div>
       </div>
     </>
   );
@@ -74,6 +81,7 @@ function ChatMessageBar() {
   function onSend() {
     const message: outgoingMessage = {
       message: messageInput,
+      timestamp: moment().toDate(),
     };
     socket.emit(socketEvent.MESSAGE, message);
     console.log("send message!", message);
